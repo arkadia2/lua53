@@ -54,3 +54,7 @@ $ make clean -- 清理
 1. gdb src/lua.exe
 2. vscode F5
 ```
+
+## 要点
+### 1. 支持gdb调试
+-O0表示优化等级0，编辑添加-g，链接不要有-s
