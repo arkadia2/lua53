@@ -58,3 +58,14 @@ $ make clean -- 清理
 ## 要点
 ### 1. 支持gdb调试
 -O0表示优化等级0，编辑添加-g，链接不要有-s
+### 2. strip用于去掉调试信息
+```
+$(LUA_A): $(BASE_O)
+	$(AR) $@ $(BASE_O)
+	# $(RANLIB) $@ # 注了，否则调试不了lua53.dll
+mingw:
+	$(MAKE) "LUA_A=lua53.dll" "LUA_T=lua.exe" \
+	"AR=$(CC) -shared -o" "RANLIB=strip --strip-unneeded" \
+	"SYSCFLAGS=-DLUA_BUILD_AS_DLL" "SYSLIBS=" "SYSLDFLAGS=" lua.exe
+	$(MAKE) "LUAC_T=luac.exe" luac.exe
+```
