@@ -30,6 +30,8 @@
 *.exe
 *.out
 *.app
+lua
+luac
 
 # IDE
 .vscode
