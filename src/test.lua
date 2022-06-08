@@ -3,8 +3,6 @@ local ltrack = require("ltrack")
 print(">> ltrack.version: ", ltrack.version())
 ltrack.run_test()
 
-<<<<<<< Updated upstream
-=======
 
 local s = 0x1fffffffffffffff
 -- local s = 100
@@ -29,7 +27,3 @@ fobj:close()
 -- print(">> i", i, type(i))
 
 
-
-
-
->>>>>>> Stashed changes

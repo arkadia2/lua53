@@ -18,13 +18,14 @@ static int track_run_test(lua_State *L) {
   return 0;
 }
 
-<<<<<<< Updated upstream
-=======
 static int track_sizeof(lua_State *L) {
->>>>>>> Stashed changes
+  return 1;
+}
+
 static const luaL_Reg lib[] = {
   {"version",   track_version},
   {"run_test",  track_run_test},
+  {"sizeof",  track_sizeof},
   {NULL, NULL}
 };
 
