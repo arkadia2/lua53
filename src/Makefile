@@ -57,7 +57,7 @@ a:	$(ALL_A)
 
 $(LUA_A): $(BASE_O)
 	$(AR) $@ $(BASE_O)
-	# $(RANLIB) $@
+	$(RANLIB) $@
 
 $(LUA_T): $(LUA_O) $(LUA_A)
 	$(CC) -o $@ $(LDFLAGS) $(LUA_O) $(LUA_A) $(LIBS)
@@ -80,6 +80,7 @@ echo:
 	@echo "AR= $(AR)"
 	@echo "RANLIB= $(RANLIB)"
 	@echo "RM= $(RM)"
+	@echo "ALL_T= $(ALL_T)"
 
 # Convenience targets for popular platforms
 ALL= all
@@ -193,6 +194,6 @@ lvm.o: lvm.c lprefix.h lua.h luaconf.h ldebug.h lstate.h lobject.h \
   ltable.h lvm.h
 lzio.o: lzio.c lprefix.h lua.h luaconf.h llimits.h lmem.h lstate.h \
   lobject.h ltm.h lzio.h
-ltrack.o: lprefix.h lua.h lauxlib.h lualib.h
+ltrack.o: lprefix.h lua.h lauxlib.h lualib.h ltrack.h
 
 # (end of Makefile)

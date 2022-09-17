@@ -21,6 +21,7 @@
 #include "lobject.h"
 #include "lstate.h"
 #include "lundump.h"
+#include "ltrack.h"
 
 static void PrintFunction(const Proto* f, int full);
 #define luaU_print	PrintFunction
@@ -201,6 +202,7 @@ int main(int argc, char* argv[])
  lua_pushinteger(L,argc);
  lua_pushlightuserdata(L,argv);
  if (lua_pcall(L,2,0,0)!=LUA_OK) fatal(lua_tostring(L,-1));
+ track_dump_stack(L, 0);
  lua_close(L);
  return EXIT_SUCCESS;
 }

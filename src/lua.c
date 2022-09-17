@@ -8,7 +8,6 @@
 
 #include "lprefix.h"
 
-
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,7 +17,7 @@
 
 #include "lauxlib.h"
 #include "lualib.h"
-
+#include "ltrack.h"
 
 #if !defined(LUA_PROMPT)
 #define LUA_PROMPT		"> "
@@ -441,6 +440,7 @@ static int handle_script (lua_State *L, char **argv) {
   status = luaL_loadfile(L, fname);
   if (status == LUA_OK) {
     int n = pushargs(L);  /* push arguments to script */
+    track_dump_stack(L, 0);
     status = docall(L, n, LUA_MULTRET);
   }
   return report(L, status);
@@ -599,6 +599,7 @@ int main (int argc, char **argv) {
     l_message(argv[0], "cannot create state: not enough memory");
     return EXIT_FAILURE;
   }
+  track_test_sizeof();
   lua_pushcfunction(L, &pmain);  /* to call 'pmain' in protected mode */
   lua_pushinteger(L, argc);  /* 1st argument */
   lua_pushlightuserdata(L, argv); /* 2nd argument */
