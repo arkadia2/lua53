@@ -19,6 +19,7 @@ const char *track_dump_table(Table *t) {
 
 void track_dump_stack(lua_State *L, int add) {
   printf("-------- dump_stack --------\n");
+  printf("top:%p stack:%p size:%d add:%d\n", L->top, L->stack, L->stacksize, add);
   int count = L->top-1+add - L->stack;
   for (StkId o=L->top-1+add; o>L->stack; o--) {
     count--;

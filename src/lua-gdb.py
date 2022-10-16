@@ -76,12 +76,12 @@ def bvalue(o): return checktype(o, LUA_VTRUE)
 # <TValue> -> <lua_State>
 def thvalue(o): return cast_u(o['value_']['gc'])['th']
 
-LUA_VNUMINT = makevariant(LUA_TNUMBER, 0)
-LUA_VNUMFLT = makevariant(LUA_TNUMBER, 1)
+LUA_TNUMFLT = makevariant(LUA_TNUMBER, 0)
+LUA_TNUMINT = makevariant(LUA_TNUMBER, 1)
 
 def ttisnumber(o): return checktype(o, LUA_TNUMBER)
-def ttisfloat(o): return checktag(o, LUA_VNUMFLT)
-def ttisinteger(o): return checktag(o, LUA_VNUMINT)
+def ttisfloat(o): return checktag(o, LUA_TNUMFLT)
+def ttisinteger(o): return checktag(o, LUA_TNUMINT)
 def ttisnil(o): return checktype(o, LUA_TNIL)
 def ttisboolean(o): return checktype(o, LUA_TBOOLEAN)
 
