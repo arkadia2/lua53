@@ -113,11 +113,21 @@ linux:
 macosx:
 	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_MACOSX" SYSLIBS="-lreadline" CC=cc
 
+# mingw:
+# 	$(MAKE) "LUA_A=lua53.dll" "LUA_T=lua.exe" \
+# 	"AR=$(CC) -shared -o" "RANLIB=strip --strip-unneeded" \
+# 	"SYSCFLAGS=-DLUA_BUILD_AS_DLL" "SYSLIBS=" "SYSLDFLAGS=" lua.exe
+# 	$(MAKE) "LUAC_T=luac.exe" luac.exe
+
 mingw:
-	$(MAKE) "LUA_A=lua53.dll" "LUA_T=lua.exe" \
-	"AR=$(CC) -shared -o" "RANLIB=strip --strip-unneeded" \
-	"SYSCFLAGS=-DLUA_BUILD_AS_DLL" "SYSLIBS=" "SYSLDFLAGS=" lua.exe
+	$(MAKE) "LUA_T=lua.exe" \
+	"SYSCFLAGS=" "SYSLIBS=" "SYSLDFLAGS=-g -O0 -Wall" lua.exe
 	$(MAKE) "LUAC_T=luac.exe" luac.exe
+
+cleanall: clean
+	$(RM) *.exe
+	$(RM) *.dll
+	$(RM) *.a
 
 posix:
 	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_POSIX"

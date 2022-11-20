@@ -1,7 +1,8 @@
 {
   "files.associations": {
     "cstdlib": "cpp",
-    "lprefix.h": "c"
+    "lprefix.h": "c",
+    "lauxlib.h": "c"
   },
   "python.pythonPath": "/bin/python3",
   "python.autoComplete.extraPaths": [

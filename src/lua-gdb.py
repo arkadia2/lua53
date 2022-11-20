@@ -363,7 +363,7 @@ def tvaluestring(value):
     elif ttisfulluserdata(value):
         return "Userdata"
     elif ttislightuserdata(value): # lightuserdata
-        return "<lightuserdata 0x%x>" % int(pvalue(value))
+        return "<lightuserdata 0x%x>" % pvalue(value)
     elif ttisthread(value):
         return thvalue(value)
     assert False, value['tt_']
@@ -410,7 +410,7 @@ class TablePrinter:
         return "map"
 
     def to_string(self):
-        return "<table 0x%x>" % int(self.val.address)
+        return "<table 0x%x>" % self.val.address
 
     def children(self):
         setMarked = False
@@ -418,9 +418,10 @@ class TablePrinter:
             TablePrinter.marked = {}
             setMarked = True
 
-        address = int(self.val.address)
+        address = self.val.address
         if address in TablePrinter.marked:
-            return TablePrinter.marked[address]
+            yield TablePrinter.marked[address]
+            return
         TablePrinter.marked[address] = self.to_string()
 
         # array part
@@ -481,7 +482,7 @@ class LClosurePrinter:
         return "map"
 
     def to_string(self):
-        return "<lclosure 0x%x>" % int(self.val.address)
+        return "<lclosure 0x%x>" % self.val.address
 
     def children(self):
         p = self.val['p']
@@ -506,7 +507,7 @@ class CClosurePrinter:
         return "map"
 
     def to_string(self):
-        return "<cclosure 0x%x>" % int(self.val.address)
+        return "<cclosure 0x%x>" % self.val.address
 
     def children(self):
         yield "1", "nupvalues"
@@ -524,7 +525,7 @@ class LuaStatePrinter:
         return "map"
 
     def to_string(self):
-        return "<coroutine 0x%x>" % int(self.val.address)
+        return "<coroutine 0x%x>" % self.val.address
 
     def children(self):
         cv = CallInfoValue(self.val, self.val['ci'])
@@ -568,7 +569,7 @@ as the lua_State*. You can provide an alternate lua_State as the first argument.
         stack = L['top'] - 1
         i = 0
         while stack > L['stack']:
-            print("#%d\t0x%x\t%s" % (i, int(stack), stack.dereference()))
+            print("#%d\t0x%x\t%s" % (i, stack, stack.dereference()))
             stack = stack - 1
             i = i + 1
 
