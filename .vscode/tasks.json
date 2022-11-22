@@ -10,6 +10,14 @@
       "problemMatcher": [
         "$gcc"
       ]
+    },
+    {
+      "label": "make mingw",
+      "type": "shell",
+      "command": "cd src && make mingw",
+      "problemMatcher": [
+        "$gcc"
+      ]
     }
   ]
 }
