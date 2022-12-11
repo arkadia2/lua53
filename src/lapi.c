@@ -56,21 +56,26 @@ const char lua_ident[] =
 #define api_checkstackindex(i, o)  \
 	api_check(isstackindex(i, o), "index not in the stack")
 
-
+// 由idx取出TValue*
+// LUA_REGISTRYINDEX为一个负数，目前被定义为-1000
 static TValue *index2addr (lua_State *L, int idx) {
   CallInfo *ci = L->ci;
+  // 1. idx > 0 从ci->func开始，正向查找stack
   if (idx > 0) {
     TValue *o = ci->func + idx;
     api_check(idx <= ci->top - (ci->func + 1), "unacceptable index");
     if (o >= L->top) return NONVALIDVALUE;
     else return o;
   }
+  // 2. idx > LUA_REGISTRYINDEX，如-1，-2，也可以查到stack上的值
   else if (!ispseudo(idx)) {  /* negative index */
     api_check(idx != 0 && -idx <= L->top - (ci->func + 1), "invalid index");
     return L->top + idx;
   }
+  // 3. idx == LUA_REGISTRYINDEX, 注册表
   else if (idx == LUA_REGISTRYINDEX)
     return &G(L)->l_registry;
+  // 4. idx < LUA_REGISTRYINDEX, idx应该是由lua_upvalueindex(i)计算得的，ci->func对应的upvalue
   else {  /* upvalues */
     idx = LUA_REGISTRYINDEX - idx;
     api_check(idx <= MAXUPVAL + 1, "upvalue index too large");
@@ -93,7 +98,7 @@ static void growstack (lua_State *L, void *ud) {
   luaD_growstack(L, size);
 }
 
-
+// n是增量，检查并增加stack n格
 LUA_API int lua_checkstack (lua_State *L, int n) {
   int res;
   CallInfo *ci = L->ci;
@@ -114,7 +119,7 @@ LUA_API int lua_checkstack (lua_State *L, int n) {
   return res;
 }
 
-
+// stack from上top下的n个值移到stack to的top上
 LUA_API void lua_xmove (lua_State *from, lua_State *to, int n) {
   int i;
   if (from == to) return;
@@ -129,7 +134,7 @@ LUA_API void lua_xmove (lua_State *from, lua_State *to, int n) {
   lua_unlock(to);
 }
 
-
+// 设置最后的退出函数
 LUA_API lua_CFunction lua_atpanic (lua_State *L, lua_CFunction panicf) {
   lua_CFunction old;
   lua_lock(L);
@@ -152,6 +157,11 @@ LUA_API const lua_Number *lua_version (lua_State *L) {
 ** basic stack manipulation
 */
 
+// i ni val
+// 3 -1 c      top
+// 2 -2 b
+// 1 -3 a
+// 0 -4 func
 
 /*
 ** convert an acceptable stack index into an absolute index

@@ -19,7 +19,6 @@
                 "${workspaceFolder}/**"
             ],
             "defines": [
-                "LUA_USE_LINUX"
             ],
             "compilerPath": "C:\\mingw64\\bin\\gcc.exe",
             "cStandard": "c11",

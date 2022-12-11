@@ -45,8 +45,8 @@
 ** Maximum size of array part (MAXASIZE) is 2^MAXABITS. MAXABITS is
 ** the largest integer such that MAXASIZE fits in an unsigned int.
 */
-#define MAXABITS	cast_int(sizeof(int) * CHAR_BIT - 1)
-#define MAXASIZE	(1u << MAXABITS)
+#define MAXABITS	cast_int(sizeof(int) * CHAR_BIT - 1) // unsigned int的位数，一般是32-1 = 31
+#define MAXASIZE	(1u << MAXABITS) // 2^31 ? 不是应该是2^32 - 1 吗
 
 /*
 ** Maximum size of hash part is 2^MAXHBITS. MAXHBITS is the largest
@@ -57,7 +57,7 @@
 #define MAXHBITS	(MAXABITS - 1)
 
 
-#define hashpow2(t,n)		(gnode(t, lmod((n), sizenode(t))))
+#define hashpow2(t,n)		(gnode(t, lmod((n), sizenode(t)))) // 返回n hash后在node数据上的指针
 
 #define hashstr(t,str)		hashpow2(t, (str)->hash)
 #define hashboolean(t,p)	hashpow2(t, p)
@@ -80,7 +80,7 @@
 
 static const Node dummynode_ = {
   {NILCONSTANT},  /* value */
-  {{NILCONSTANT, 0}}  /* key */
+  {{NILCONSTANT, 0}}  /* key */ // TKey初始化，union的初始化
 };
 
 
@@ -88,7 +88,7 @@ static const Node dummynode_ = {
 ** Checks whether a float has a value representable as a lua_Integer
 ** (and does the conversion if so)
 */
-static int numisinteger (lua_Number x, lua_Integer *p) {
+static int numisinteger (lua_Number x, lua_Integer *p) { // 返回值表示是否为整数，整数值取*p
   if ((x) == l_floor(x))  /* integral value? */
     return lua_numbertointeger(x, p);  /* try as an integer */
   else return 0;

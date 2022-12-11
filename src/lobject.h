@@ -502,11 +502,13 @@ typedef struct Table {
 /*
 ** 'module' operation for hashing (size is always a power of 2)
 */
+// s&(size-1) == s%size 只能在size为2^n才生效
+// size-1时必定是底n位全为1，s&(size-1)相当于把n前的都置0了
 #define lmod(s,size) \
 	(check_exp((size&(size-1))==0, (cast(int, (s) & ((size)-1)))))
 
 
-#define twoto(x)	(1<<(x))
+#define twoto(x)	(1<<(x)) // 2^x
 #define sizenode(t)	(twoto((t)->lsizenode))
 
 

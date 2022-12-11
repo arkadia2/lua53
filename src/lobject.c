@@ -54,7 +54,7 @@ int luaO_fb2int (int x) {
   else return ((x & 7) + 8) << (e - 1);
 }
 
-
+// x >= 1, 返回n，n为最小的整数，使2^n刚好>=x
 int luaO_ceillog2 (unsigned int x) {
   static const lu_byte log_2[256] = {
     0,1,2,2,3,3,3,3,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
@@ -68,6 +68,7 @@ int luaO_ceillog2 (unsigned int x) {
   };
   int l = 0;
   x--;
+  // x < 256直接查表；x>=256，右移多个8位，转化为<256
   while (x >= 256) { l += 8; x >>= 8; }
   return l + log_2[x];
 }

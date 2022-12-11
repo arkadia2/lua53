@@ -71,6 +71,7 @@ void track_test_sizeof() {
   print_size(Value);
   print_size(int);
   print_size(TValue);
+  print_size(TString);
   print_size(UTString);
 }
 

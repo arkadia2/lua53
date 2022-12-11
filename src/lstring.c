@@ -54,6 +54,9 @@ unsigned int luaS_hash (const char *str, size_t l, unsigned int seed) {
 }
 
 
+
+// 对于扩大,newsize > tb->size，先审请内存，再遍历所有字符串重新放(rehash)
+// 对于缩小，newsize < tb->size, 先rehash，再释放内存
 /*
 ** resizes the string table
 */
@@ -70,7 +73,7 @@ void luaS_resize (lua_State *L, int newsize) {
     tb->hash[i] = NULL;
     while (p) {  /* for each node in the list */
       TString *hnext = p->hnext;  /* save next */
-      unsigned int h = lmod(p->hash, newsize);  /* new position */
+      unsigned int h = lmod(p->hash, newsize);  /* new position */ // 注意是newsize
       p->hnext = tb->hash[h];  /* chain it */
       tb->hash[h] = p;
       p = hnext;
@@ -95,7 +98,7 @@ static TString *createstrobj (lua_State *L, const char *str, size_t l,
   GCObject *o;
   size_t totalsize;  /* total size of TString object */
   totalsize = sizelstring(l);
-  o = luaC_newobj(L, tag, totalsize);
+  o = luaC_newobj(L, tag, totalsize); // 内会创建gc object并链到全局gclist
   ts = gco2ts(o);
   ts->len = l;
   ts->hash = h;
@@ -111,6 +114,7 @@ void luaS_remove (lua_State *L, TString *ts) {
   TString **p = &tb->hash[lmod(ts->hash, tb->size)];
   while (*p != ts)  /* find previous element */
     p = &(*p)->hnext;
+  // *p是指向ts，同时也是ts的前一个s，如叫pts的hnext，*p == pts->hnext，所以下面也就相当于pts->hnext = (*p)->hnext
   *p = (*p)->hnext;  /* remove element from its list */
   tb->nuse--;
 }
