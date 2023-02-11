@@ -4,11 +4,12 @@
 #include "lprefix.h"
 
 #include "lua.h"
-
 #include "lauxlib.h"
 #include "lualib.h"
+
 #include "lapi.h"
 #include "ltrack.h"
+#include "ltable.h"
 
 #define TVALUE_BUFF_SIZE 1024
 static char TValueBuff[TVALUE_BUFF_SIZE];
@@ -89,10 +90,29 @@ static int track_sizeof(lua_State *L) {
   return 1;
 }
 
+static int track_test_table(lua_State *L) {
+  // lua_newtable(L);
+  lua_createtable(L, 100, 100);
+  int tidx = lua_gettop(L);
+  Table *t = (Table*)lua_topointer(L, tidx);
+  for (size_t i = 7; i <= 8; i++)
+  {
+    lua_pushinteger(L, i*100); // push value
+    lua_seti(L, tidx, i); // push key, set t[key]=value
+  }
+  lua_pushinteger(L, 100);
+  lua_seti(L, tidx, 127);
+  printf(">> size 111 list:%d map:%d\n", t->sizearray, 1<<t->lsizenode);
+  luaH_resize(L, t, 10, 10);
+  printf(">> size 222 list:%d map:%d\n", t->sizearray, 1<<t->lsizenode);
+  return 0;
+}
+
 static const luaL_Reg lib[] = {
   {"version",   track_version},
   {"run_test",  track_run_test},
   {"sizeof",  track_sizeof},
+  {"test_table",  track_test_table},
   {NULL, NULL}
 };
 
