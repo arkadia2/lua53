@@ -74,9 +74,49 @@ LUA_API void lua_createtable (lua_State *L, int narray, int nrec) {
 3. set
 4. is
 
-### 设计
+### 原理
+#### 1. struct
+#### 2. flow
+1. new
+luaH_new
+
+2. get
+luaH_get
+luaH_getint
+
+3. set
+luaH_set
+luaH_setint
+luaH_newkey
+rehash
+resize
+
+4. for
+luaH_next
+
+#### 3. design
 
 ### 问题
-
+1. 不同类型的hash, mainposition
+2. metatable
+```
+luaV_gettable
+```
+3. 为什么node的size是log2n
+```
+为了保证nodesize是2n大小，指数增长的，rehash是一个重新分配内存并数据大搬迁的过程，比较耗，指数增长牺牲了内存，但能减少rehash的次数，提高cpu性能
+```
+4. array的size也是log2n吗
+```
+不是，虽然rehash会把arraysize设成2n大少，但arraysize是可以随意大小的，没强要求luaH_getint时，key在arraysize内，就会返回array里的，否则去node找
+```
+5. 为什么pairs是随机的
+6. pairs时set nil了，会影响遍历吗
+```lua
+for k, v in pairs(t) do
+  print(">> k, v", k, v)
+  t[k] = nil
+end
+```
 
 ### 参考
