@@ -73,20 +73,52 @@ LUA_API void lua_createtable (lua_State *L, int narray, int nrec) {
 2. get
 3. set
 4. is
+5. for
 
 ### 原理
 #### 1. struct
+```cpp
+// 关键字段
+typedef struct Table {
+  // array part
+  unsigned int sizearray;  /* size of 'array' array */
+  TValue *array;  /* array part */
+  // hash part
+  lu_byte lsizenode;  /* log2 of size of 'node' array */
+  Node *node;
+  Node *lastfree;  /* any free position is before this position */
+  ...
+} Table;
+
+typedef struct Node {
+  TValue i_val;
+  TKey i_key;
+} Node;
+
+typedef union TKey {
+  struct {
+    TValuefields;
+    int next;  /* for chaining (offset for next node) */
+  } nk;
+  TValue tvk;
+} TKey;
+```
+![text](../image/table.drawio.svg)
+
+
 #### 2. flow
 1. new
 luaH_new
 
 2. get
-luaH_get
 luaH_getint
+luaH_get
+
+
 
 3. set
-luaH_set
 luaH_setint
+luaH_set
 luaH_newkey
 rehash
 resize
