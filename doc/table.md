@@ -103,8 +103,7 @@ typedef union TKey {
   TValue tvk;
 } TKey;
 ```
-![text](../image/table.png)
-
+![table.drawio](../image/table.drawio)
 
 #### 2. flow
 1. new
@@ -127,6 +126,15 @@ resize
 luaH_next
 
 #### 3. design
+1. table由数组array和哈希表node两部分组成
+2. array的长度为sizearray，元素为TValue
+3. node的长度为sizenode，为2^n长度，元素为Node为key-value结构，ivalue(TValue)为值，ikey为key, 里有值tvk(TValue)和next(int)
+4. 当t[k] = v的k为int且小于arraysize时进入array
+5. 否则（不为int或不在arraysize时）进入node，先对k进行hash求长度mod算出mainpostion，如果mainpostion有值了则发生了冲突，利用lastfree找一个空的并链接到mainpostion.key.next
+6. lastfree开始指向node的最后一个元素，当发生冲突时，从后向前找第一个为空的node返回
+7. 当lastfree找不到空的node表示table已经达到容量上限，会触发rehash
+8. rehash会先计算合适的sizearray和sizenode, 然用调用resize把所有数据移过去，先relloc array和node，然后一个一个的调用t[k]=v，自动插入到array或node里
+9. 计算sizearray有算法一个基本思想是，计算2^n里的n，使arraysize=2^n时能容纳原来array超过一以上的能进array里的元素，也就是原来t里的array和node里，有一般能进到新的array
 
 ### 问题
 1. 不同类型的hash, mainposition
