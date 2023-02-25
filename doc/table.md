@@ -103,7 +103,7 @@ typedef union TKey {
   TValue tvk;
 } TKey;
 ```
-![text](../image/table.drawio.svg)
+![text](../image/table.png)
 
 
 #### 2. flow
