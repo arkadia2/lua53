@@ -1,6 +1,11 @@
 # lua53
 ## 意图
 学习 lua 源码
+## 能力
+1. 明白lua的原理和设计意图
+2. 能开发第3方库，扩展lua
+3. 能调试解决问题
+4. 能优化
 ## 编译
 ### 1. 下载mingw64
 1. (下载链接参考)[https://code.visualstudio.com/docs/cpp/config-mingw]
